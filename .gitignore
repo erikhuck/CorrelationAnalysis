@@ -1,3 +1,5 @@
 *.err
 *.out
 example*
+.idea
+*__pycache__*
