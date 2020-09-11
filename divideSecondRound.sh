@@ -1,0 +1,1 @@
+python divideByDict.py /private/storage/bioinfstg3/2018/erikpetr/AD_SubTypes/AD_SubTypesDataClean/processed-data/feat-maps/adni/ptgender_Male.csv ../../erikpetr/AD_SubTypes/AD_SubTypesDataClean/processed-data/feat-maps/adni/cdglobal.p 
