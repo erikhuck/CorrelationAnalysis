@@ -1,5 +1,6 @@
 *.err
 *.out
-example*
 .idea
 *__pycache__*
+data/
+legacy/
