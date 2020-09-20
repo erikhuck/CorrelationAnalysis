@@ -27,6 +27,7 @@ def debug_data():
     # Make a subset of the data and column types
     col_types: dict = {header: col_types[header] for header in headers}
     assert set(headers) == set(col_types.keys())
+    assert len(headers) == len(col_types)
 
     with open('data/debug-col-types.p', 'wb') as f:
         dump(col_types, f)
