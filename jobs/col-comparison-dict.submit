@@ -1,0 +1,20 @@
+#!/bin/sh
+
+SCRIPT_NAME="col-comparison-dict" # col-comparison-dict
+DATA_PATH="data/data.csv" # /debug-data.csv
+COL_TYPES_PATH="data/col-types.p" # data/debug-col-types.p
+TOTAL_N_COLS=1047909 # 1048
+SECTION_SIZE=1048 # 105
+SECTION_IDX=$1
+N_CORES=8 # 2
+OUT_DIR="comp-dicts" # debug-comp-dicts
+JOB_NAME=$SCRIPT_NAME-$SECTION_IDX
+
+sbatch -J $JOB_NAME \
+    --time=00-12:00:00 \
+    --nodes=1 \
+    --ntasks=$N_CORES \
+    --mem=128G \
+    -o job-output/${JOB_NAME}.out \
+    -e job-output/${JOB_NAME}.err \
+    jobs/${SCRIPT_NAME}.sh $DATA_PATH $COL_TYPES_PATH $TOTAL_N_COLS $SECTION_SIZE $SECTION_IDX $N_CORES $OUT_DIR
