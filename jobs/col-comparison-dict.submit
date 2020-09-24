@@ -15,6 +15,6 @@ sbatch -J $JOB_NAME \
     --nodes=1 \
     --ntasks=$N_CORES \
     --mem=128G \
-    -o job-output/${JOB_NAME}.out \
-    -e job-output/${JOB_NAME}.err \
+    -o slurm-output/${JOB_NAME}.out \
+    -e slurm-output/${JOB_NAME}.err \
     jobs/${SCRIPT_NAME}.sh $DATA_PATH $COL_TYPES_PATH $TOTAL_N_COLS $SECTION_SIZE $SECTION_IDX $N_CORES $OUT_DIR
