@@ -25,6 +25,7 @@ Number of Sections: 0-9
 
 dataset: dict = {}
 col_types: dict = {}
+col_headers: list = []
 PTID_COL: str = 'PTID'
 CSV_DELIMINATOR: str = ','
 NUMERIC_TYPE: str = 'numeric'
@@ -35,6 +36,7 @@ def main():
 	"""Main method"""
 
 	global col_types
+	global col_headers
 
 	data_path: str = argv[1]
 	col_types_path: str = argv[2]
@@ -57,13 +59,13 @@ def main():
 	df: list = df.split('\n')
 
 	# Construct the data set from the input file such that it is transposed (columns are rows and rows are columns)
-	col_headers: list = df[0].split(CSV_DELIMINATOR)
+	col_headers = df[0].split(CSV_DELIMINATOR)
 
 	# Remove the patient ID from the column headers
 	if PTID_COL in col_headers:
 		assert col_headers[0] == PTID_COL
 		assert section_idx == 0
-		col_headers: list = col_headers[1:]
+		col_headers = col_headers[1:]
 
 	df: list = df[1:]
 	df.remove('')
@@ -110,9 +112,9 @@ def main():
 
 	print('Setup Time: {}\n'.format(time() - start_time))
 
-	start_time = time()
+	start_time: float = time()
 	freeze_support()
-	comparison_dict: dict = col_comparison_dict(col_headers=col_headers, row_headers=row_headers, n_threads=n_cores)
+	comparison_dict: dict = col_comparison_dict(row_headers=row_headers, n_threads=n_cores)
 
 	with open('data/{}/{}.p'.format(out_dir, str(section_idx).zfill(4)), 'wb') as f:
 		dump(comparison_dict, f)
@@ -133,7 +135,7 @@ def get_cut_command_result(section_size: int, section_idx: int, total_n_cols: in
 	return popen(command).read()
 
 
-def col_comparison_dict(col_headers: list, row_headers: list, n_threads: int) -> dict:
+def col_comparison_dict(row_headers: list, n_threads: int) -> dict:
 	"""Constructs the column comparison dictionary with comparisons of each column in a dataset to every other column"""
 
 	n_col: int = len(col_headers)
@@ -142,11 +144,15 @@ def col_comparison_dict(col_headers: list, row_headers: list, n_threads: int) ->
 
 	# For each column in this process's section of the data set, compare to every other column
 	for i, row_header in enumerate(row_headers):
-		start_time: float = time()
 		print('{}: {}'.format(str(i).zfill(4), row_header))
 
-		# Initialize the thread pool
+		start_time: float = time()
+
+                # Initialize the thread pool
 		p = Pool(processes=n_threads)
+
+                print('Time initializing the thread pool:', time() - start_time)
+		start_time: float = time()
 
 		# We start at the current index plus 1 so we don't perform redundant comparisons or self-comparisons
 		# (e.g. col1 with itself or col1 with col2 and then col2 with col1)
@@ -165,14 +171,14 @@ def col_comparison_dict(col_headers: list, row_headers: list, n_threads: int) ->
 			if start >= n_col:
 				break
 
-			batches.append(col_headers[start:end])
+			batches.append((start, end))
 			start: int = end
 			end: int = start + batch_size
 
 		# Each batch will be processed on its own thread to construct its portion of the column comparison dictionary
-		arg_list = [(row_header, batch) for batch in batches]
+		arg_list = [(row_header, start, end) for start, end in batches]
 
-		print('Time Before Threading:', time() - start_time)
+		print('Time Setting Up The Batches:', time() - start_time)
 		start_time: float = time()
 
 		# Add all the batch results (sub-dictionaries) to the main dictionary
@@ -202,10 +208,11 @@ def col_comparison_dict(col_headers: list, row_headers: list, n_threads: int) ->
 def compare_batch(args: tuple) -> dict:
 	"""Runs the correlation algorithm on all the columns in a thread's batch"""
 
-	header1, batch = args
+	header1, start, end = args
 	result_dict: dict = {}
 
-	for header2 in batch:
+	for i in range(start, end):
+		header2: str = col_headers[i]
 		key: tuple = tuple(sorted([header1, header2]))
 		result_dict[key] = compare(header1, header2)
 
