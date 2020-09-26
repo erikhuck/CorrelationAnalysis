@@ -148,10 +148,10 @@ def col_comparison_dict(row_headers: list, n_threads: int) -> dict:
 
 		start_time: float = time()
 
-                # Initialize the thread pool
+		# Initialize the thread pool
 		p = Pool(processes=n_threads)
 
-                print('Time initializing the thread pool:', time() - start_time)
+		print('Time initializing the thread pool:', time() - start_time)
 		start_time: float = time()
 
 		# We start at the current index plus 1 so we don't perform redundant comparisons or self-comparisons
