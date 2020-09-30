@@ -5,10 +5,11 @@ DATA_PATH="data/data.csv" # /debug-data.csv
 COL_TYPES_PATH="data/col-types.p" # data/debug-col-types.p
 TOTAL_N_COLS=1047909 # 1048
 SECTION_SIZE=1048 # 105
-SECTION_IDX=$1
-N_CORES=4 # 2
+SECTION_IDX=0 # $1
+N_CORES=8 # $2
 OUT_DIR="comp-dicts" # debug-comp-dicts
 JOB_NAME=$SCRIPT_NAME-$SECTION_IDX
+MEM=128 # $3
 
 sbatch -J $JOB_NAME \
     --time=00-12:00:00 \

@@ -177,8 +177,11 @@ def col_comparison_dict(row_headers: list, n_threads: int) -> dict:
 
 		# Each batch will be processed on its own thread to construct its portion of the column comparison dictionary
 		arg_list = [(row_header, start, end) for start, end in batches]
+		assert len(arg_list) == len(batches)
 
 		print('Time Setting Up The Batches:', time() - start_time)
+		print('Batch Size:', batch_size)
+		print('Number Of Batches:', len(arg_list))
 		start_time: float = time()
 
 		# Add all the batch results (sub-dictionaries) to the main dictionary
