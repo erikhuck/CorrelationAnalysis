@@ -1,5 +1,3 @@
-*.err
-*.out
 .idea
 *__pycache__*
 legacy/
