@@ -21,6 +21,7 @@ function update {
     echo `python3 -c "x = $VAR - ${INCREMENT}; print(x)"`
 }
 
+IDX1=0
 N_IDX=999
 CPU=8 # 4
 MIN_CPU=2
@@ -29,7 +30,7 @@ MEM=128
 MIN_MEM=16
 MEM_INCREMENT=`increment $MEM $MIN_MEM $N_IDX`
 
-for IDX in $(seq 1 ${N_IDX})
+for IDX in $(seq ${IDX1} ${N_IDX})
 do
     echo $IDX `as_integer $CPU` `as_integer $MEM`
     # bash jobs/col-comparison-dict.submit $IDX $CPU $MEM
