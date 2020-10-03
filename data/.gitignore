@@ -1,1 +1,7 @@
+# Ignore everything in the directory where this git ignore is located
 *
+
+# But don't ingore these
+!.gitignore
+!comp-dicts/
+!debug-comp-dicts/
