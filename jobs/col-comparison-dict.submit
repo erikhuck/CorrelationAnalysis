@@ -9,10 +9,10 @@ SECTION_IDX=0 # $1
 N_CORES=16 # $2
 OUT_DIR="comp-dicts" # debug-comp-dicts
 JOB_NAME=$SCRIPT_NAME-$SECTION_IDX
-MEM=256 # $3
+MEM=512 # $3
 
 sbatch -J $JOB_NAME \
-    --time=02-00:00:00 \
+    --time=00-12:00:00 \
     --nodes=1 \
     --ntasks=$N_CORES \
     --mem=${MEM}G \
