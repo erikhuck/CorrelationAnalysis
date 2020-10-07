@@ -10,6 +10,7 @@ from time import time
 from sys import argv
 from multiprocessing import Pool, freeze_support
 from math import ceil
+from tqdm import tqdm
 
 """
 Real Data:
@@ -222,7 +223,7 @@ def compare_batch(args: tuple) -> dict:
 
 	result_dict: dict = {}
 
-	for row_idx, (col_start, col_stop) in args:
+	for row_idx, (col_start, col_stop) in tqdm(args):
 		for col_idx in range(col_start, col_stop):
 			header1: str = headers[row_idx]
 			header2: str = headers[col_idx]

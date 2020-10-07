@@ -1,5 +1,7 @@
 #!/bin/sh
 
+source ../env/bin/activate
+
 DATA_PATH=$1
 COL_TYPES_PATH=$2
 TOTAL_N_COLS=$3
