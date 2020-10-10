@@ -10,7 +10,6 @@ from time import time
 from sys import argv
 from multiprocessing import Pool, freeze_support
 from math import ceil
-from tqdm import tqdm
 
 """
 Real Data:
@@ -222,8 +221,12 @@ def compare_batch(args: tuple) -> dict:
 	"""Runs the correlation algorithm on all the columns in a thread's batch"""
 
 	result_dict: dict = {}
+	batch_size: int = len(args)
 
-	for row_idx, (col_start, col_stop) in tqdm(args):
+	for i, (row_idx, (col_start, col_stop)) in enumerate(args):
+		if i % 10 == 0:
+			print('Thread Progress of Batch Beginning at {}: {:.2f}%'.format(args[0][0], i / batch_size * 100))
+
 		for col_idx in range(col_start, col_stop):
 			header1: str = headers[row_idx]
 			header2: str = headers[col_idx]

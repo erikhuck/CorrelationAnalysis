@@ -29,11 +29,15 @@ CPU_INCREMENT=`increment $CPU $MIN_CPU $N_IDX`
 MEM=128
 MIN_MEM=16
 MEM_INCREMENT=`increment $MEM $MIN_MEM $N_IDX`
+TIME=48
+MIN_TIME=1
+TIME_INCREMENT=`increment $TIME $MIN_TIME $N_IDX`
 
 for IDX in $(seq ${IDX1} ${N_IDX})
 do
-    echo $IDX `as_integer $CPU` `as_integer $MEM`
-    # bash jobs/col-comparison-dict.submit $IDX $CPU $MEM
+    echo $IDX `as_integer $CPU` `as_integer $MEM` `as_integer $TIME`
+    # bash jobs/col-comparison-dict.submit $IDX `as_integer $CPU` `as_integer $MEM` `as_integer $TIME`
     CPU=`update $CPU $CPU_INCREMENT`
     MEM=`update $MEM $MEM_INCREMENT`
+    TIME=`update $TIME $TIME_INCREMENT`
 done

@@ -6,13 +6,14 @@ COL_TYPES_PATH="data/col-types.p" # data/debug-col-types.p
 TOTAL_N_COLS=1047909 # 1048
 SECTION_SIZE=1048 # 105
 SECTION_IDX=0 # $1
-N_CORES=16 # $2
+N_CORES=8 # $2
 OUT_DIR="comp-dicts" # debug-comp-dicts
 JOB_NAME=$SCRIPT_NAME-$SECTION_IDX
-MEM=512 # $3
+MEM=1024 # $3
+HOURS=25 # $4
 
 sbatch -J $JOB_NAME \
-    --time=00-12:00:00 \
+    --time=00-${HOURS}:00:00 \
     --nodes=1 \
     --ntasks=$N_CORES \
     --mem=${MEM}G \
