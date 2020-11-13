@@ -10,18 +10,15 @@ from time import time
 from sys import argv
 from multiprocessing import Pool, freeze_support
 from math import ceil
-from tqdm import tqdm
 
 """
 Real Data:
-Total Columns: 1047909
-Section Size: 1048
-Number of Sections: 0-999
+Stop Index: 1047910
+Base Number Of Rows: 132
 
 Debug Data:
-Total Columns: 1048
-Section Size: 105
-Number of Sections: 0-9
+Stop Index: 1049
+Base Number Of Rows: 55
 """
 
 dataset_cols: dict = {}
@@ -41,33 +38,33 @@ def main():
 
 	data_path: str = argv[1]
 	col_types_path: str = argv[2]
-	total_n_cols: int = int(argv[3])
-	section_size: int = int(argv[4])
-	section_idx: int = int(argv[5])
+	start_idx: int = int(argv[3])
+	stop_idx: int = int(argv[4])
+	n_rows: int = int(argv[5])
 	n_cores: int = int(argv[6])
 	out_dir: str = argv[7]
 
-	print('Total Number Of Columns:', total_n_cols)
-	print('Section Size:', section_size)
-	print('Section Index:', section_idx)
+	# We don't want to begin at the PTID column
+	assert start_idx >= 2
+
+	assert stop_idx > start_idx
+	assert n_rows <= stop_idx - start_idx
+
+	print('Start Column Index:', start_idx)
+	print('Stop Column Index:', stop_idx)
+	print('Number Of Rows:', n_rows)
 	print('Number of Cores and Threads:', n_cores)
 
 	start_time: float = time()
 
 	# Construct the data set from the input file as a mapping from a header to its corresponding column
 	df: str = get_cut_command_result(
-		section_size=section_size, section_idx=section_idx, total_n_cols=total_n_cols, data_path=data_path
+		start_idx=start_idx, stop_idx=stop_idx, data_path=data_path
 	)
 	df: list = df.split('\n')
 
+	# Separate the headers from the rest of the data frame
 	headers = df[0].split(CSV_DELIMINATOR)
-
-	# Remove the patient ID from the column headers
-	if PTID_COL in headers:
-		assert headers[0] == PTID_COL
-		assert section_idx == 0
-		headers = headers[1:]
-
 	df: list = df[1:]
 	df.remove('')
 	assert '' not in df
@@ -78,11 +75,6 @@ def main():
 	# Construct the data set from which this process's section of the column comparison dictionary will be computed
 	for i, row in enumerate(df):
 		row = row.split(CSV_DELIMINATOR)
-
-		# Remove the patient ID from the row if this process's section is 0, since patient ID is the first header
-		if section_idx == 0:
-			assert '_S_' in row[0]
-			row = row[1:]
 
 		assert len(row) == len(headers)
 
@@ -116,33 +108,22 @@ def main():
 	assert len(dataset_cols) == len(headers)
 	assert set(dataset_cols.keys()) == set(headers)
 
-	# Get the number of rows in the conceptual comparison matrix which the column comparison dictionary represents
-	if len(headers) > section_size:
-		# Since PTID was removed, if on the 0th section, we need to have one less row to avoid section overlap
-		n_rows: int = section_size if section_idx > 0 else section_size - 1
-	else:
-		n_rows: int = len(headers)
-
 	print('Setup Time: {}'.format(time() - start_time))
 	freeze_support()
 
 	comparison_dict: dict = col_comparison_dict(n_rows=n_rows, n_threads=n_cores)
 
-	with open('data/{}/{}.p'.format(out_dir, str(section_idx).zfill(4)), 'wb') as f:
+	with open('data/{}/{}.p'.format(out_dir, str(start_idx).zfill(4)), 'wb') as f:
 		dump(comparison_dict, f)
 
 
-def get_cut_command_result(section_size: int, section_idx: int, total_n_cols: int, data_path: str) -> str:
+def get_cut_command_result(start_idx: int, stop_idx: int, data_path: str) -> str:
 	"""Gets the portion of the data set needed for this section of the column comparison dictionary"""
 
 	# Computation of the comparison dictionary is divided into sections, each of which is performed by its own process
-	# Some sections are larger than others, beginning at their own start index but all going to the final dataset column
 	# Each section of the comparison dictionary represents a number of rows in its equivalent comparison matrix
-	start_idx: int = section_size * section_idx
-
 	# The cut command will load in the section of the data set for this process
-	# We need to add 1 to the start column index because the cut command uses 1-indexing rather than 0-indexing
-	command: str = 'cut -f {}-{} -d \',\' {}'.format(start_idx + 1, total_n_cols + 1, data_path)
+	command: str = 'cut -f {}-{} -d \',\' {}'.format(start_idx, stop_idx, data_path)
 	return popen(command).read()
 
 
@@ -222,8 +203,12 @@ def compare_batch(args: tuple) -> dict:
 	"""Runs the correlation algorithm on all the columns in a thread's batch"""
 
 	result_dict: dict = {}
+	batch_size: int = len(args)
 
-	for row_idx, (col_start, col_stop) in tqdm(args):
+	for i, (row_idx, (col_start, col_stop)) in enumerate(args):
+		if i % 10 == 0:
+			print('Thread Progress of Batch Beginning at {}: {:.2f}%'.format(args[0][0], i / batch_size * 100))
+
 		for col_idx in range(col_start, col_stop):
 			header1: str = headers[row_idx]
 			header2: str = headers[col_idx]
