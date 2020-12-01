@@ -113,7 +113,7 @@ def main():
 
 	comparison_dict: dict = col_comparison_dict(n_rows=n_rows, n_threads=n_cores)
 
-	with open('data/{}/{}.p'.format(out_dir, str(start_idx).zfill(4)), 'wb') as f:
+	with open('data/{}/{}.p'.format(out_dir, str(start_idx).zfill(7)), 'wb') as f:
 		dump(comparison_dict, f)
 
 
