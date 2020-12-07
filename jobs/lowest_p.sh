@@ -7,5 +7,5 @@ K_VALUE=$1
 P_VALUE=$2
 IN_DIR=$3
 OUT_DIR=$4
-
-python3 top_k.py $K_VALUE $P_VALUE $IN_DIR $OUT_DIR
+INDEX=$5
+python3 top_k.py $K_VALUE $P_VALUE $IN_DIR $OUT_DIR $INDEX

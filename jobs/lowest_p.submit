@@ -1,18 +1,19 @@
 #!/bin/sh
 #sys.argv[1] = K value, sys.argv[2] = p value, sys.argv[3] = input directory, sys.argv[4] = output file
 SCRIPT_NAME="lowest_p"
-K_VALUE="50"
-P_VALUE=".000000012"
-IN_DIR="data/comp-dicts/"
-OUT_FILE="data/top_k_results.txt"
-JOB_NAME=${SCRIPT_NAME}-${K_VALUE}-${P_VALUE}
+K_VALUE="50" 
+P_VALUE=".000000012" 
+IN_DIR="data/debug-comp-dicts/"
+INDEX=$1
+JOB_NAME=${SCRIPT_NAME}-${K_VALUE}-${P_VALUE}-${INDEX}
+OUT_FILE="top_k_results/${JOB_NAME}"
 
 sbatch -J $JOB_NAME \
-    --time=00-12:00:00 \
+    --time=00-02:00:00 \
     --nodes=1 \
     --ntasks=1 \
     --mem=512G \
     -o slurm-output/${JOB_NAME}.out \
     -e slurm-output/${JOB_NAME}.err \
-    jobs/${SCRIPT_NAME}.sh $K_VALUE $P_VALUE $IN_DIR $OUT_FILE
+    jobs/${SCRIPT_NAME}.sh $K_VALUE $P_VALUE $IN_DIR $OUT_FILE $INDEX
 
