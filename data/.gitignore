@@ -5,3 +5,4 @@
 !.gitignore
 !comp-dicts/
 !debug-comp-dicts/
+!inter_top_k_results/

@@ -7,7 +7,7 @@ from os import popen
 from pandas import DataFrame
 from pickle import load, dump
 from time import time
-from sys import argv
+from sys import argv, stdout
 from multiprocessing import Pool, freeze_support
 from math import ceil
 
@@ -113,7 +113,7 @@ def main():
 
 	comparison_dict: dict = col_comparison_dict(n_rows=n_rows, n_threads=n_cores)
 
-	with open('data/{}/{}.p'.format(out_dir, str(start_idx).zfill(4)), 'wb') as f:
+	with open('data/{}/{}.p'.format(out_dir, str(start_idx).zfill(7)), 'wb') as f:
 		dump(comparison_dict, f)
 
 
@@ -146,7 +146,7 @@ def col_comparison_dict(n_rows: int, n_threads: int) -> dict:
 	# Compute the sub dictionary in each thread according to that thread's batch
 	sub_dicts: list = p.map(compare_batch, arg_list)
 
-	print('Time Threading:', time() - start_time)
+	stdout.write('Time Threading: ' + str(time() - start_time))
 
 	p.close()
 	start_time: float = time()
@@ -156,7 +156,7 @@ def col_comparison_dict(n_rows: int, n_threads: int) -> dict:
 		comparison_dict.update(sub_dict)
 		del sub_dict
 
-	print('Time Stitching Batch Threads:', time() - start_time)
+	stdout.write('Time Stitching Batch Threads: ' + str(time() - start_time))
 
 	# Ensure the dictionary represents the number of cells that would be in this process's section of the matrix
 	n_cells_left_and_below_diagonal: int = (n_rows ** 2 - n_rows) // 2
