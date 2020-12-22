@@ -8,11 +8,11 @@ STOP_IDX=$2
 N_ROWS=$3
 N_CORES=3
 OUT_DIR="comp-dicts"
-MEM=192
+MEM=128
 JOB_NAME=$SCRIPT_NAME-${START_IDX}-${N_ROWS}-${N_CORES}-${MEM}
 
 sbatch -J $JOB_NAME \
-    --time=00-04:00:00 \
+    --time=00-3:00:00 \
     --nodes=1 \
     --ntasks=$N_CORES \
     --mem=${MEM}G \

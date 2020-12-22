@@ -1,5 +1,5 @@
 TOTAL_N_COLS=1047909 # 1048
-N_ROWS=132 # 55
+N_ROWS=66 # 55
 
 function get_n_total_cells {
     N_ROWS=$1
