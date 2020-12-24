@@ -2,7 +2,6 @@
 
 SCRIPT_NAME="col-comparison-dict"
 DATA_PATH="data/data.csv"
-COL_TYPES_PATH="data/col-types.p"
 START_IDX=$1
 STOP_IDX=$2
 N_ROWS=$3
@@ -18,4 +17,4 @@ sbatch -J $JOB_NAME \
     --mem=${MEM}G \
     -o slurm-output/${JOB_NAME}.out \
     -e slurm-output/${JOB_NAME}.err \
-    jobs/${SCRIPT_NAME}.sh $DATA_PATH $COL_TYPES_PATH $START_IDX $STOP_IDX $N_ROWS $N_CORES $OUT_DIR
+    jobs/${SCRIPT_NAME}.sh $DATA_PATH $START_IDX $STOP_IDX $N_ROWS $N_CORES $OUT_DIR

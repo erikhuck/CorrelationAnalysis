@@ -2,6 +2,9 @@
 
 from sys import argv
 from pandas import DataFrame, read_csv
+from pickle import dump
+
+from utils import ALPHAS_PATH
 
 
 def main():
@@ -16,6 +19,8 @@ def main():
     print('Number Of Comparisons / Statistical Tests:', int(n_tests))
     corrected_alpha: float = alpha / n_tests
     print('Bonferroni Corrected Alpha:', corrected_alpha)
+    alphas = alpha, corrected_alpha
+    dump(alphas, open(ALPHAS_PATH, 'wb'))
 
 
 if __name__ == '__main__':

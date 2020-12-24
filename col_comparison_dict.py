@@ -5,11 +5,13 @@ from numpy import array
 from scipy.stats import chi2_contingency, pearsonr, f_oneway
 from os import popen
 from pandas import DataFrame
-from pickle import load, dump
+from pickle import dump
 from time import time
 from sys import argv, stdout
 from multiprocessing import Pool, freeze_support
 from math import ceil
+
+from utils import get_type, NUMERIC_TYPE, NOMINAL_TYPE, get_col_types
 
 """
 Real Data:
@@ -26,8 +28,6 @@ col_types: dict = {}
 headers: list = []
 PTID_COL: str = 'PTID'
 CSV_DELIMINATOR: str = ','
-NUMERIC_TYPE: str = 'numeric'
-NOMINAL_TYPE: str = 'nominal'
 
 
 def main():
@@ -37,12 +37,11 @@ def main():
 	global headers
 
 	data_path: str = argv[1]
-	col_types_path: str = argv[2]
-	start_idx: int = int(argv[3])
-	stop_idx: int = int(argv[4])
-	n_rows: int = int(argv[5])
-	n_cores: int = int(argv[6])
-	out_dir: str = argv[7]
+	start_idx: int = int(argv[2])
+	stop_idx: int = int(argv[3])
+	n_rows: int = int(argv[4])
+	n_cores: int = int(argv[5])
+	out_dir: str = argv[6]
 
 	# We don't want to begin at the PTID column
 	assert start_idx >= 2
@@ -70,7 +69,7 @@ def main():
 	assert '' not in df
 
 	# Load in the column types which will indicate whether a column is numeric or nominal
-	col_types = load(open(col_types_path, 'rb'))
+	col_types = get_col_types()
 
 	# Construct the data set from which this process's section of the column comparison dictionary will be computed
 	for i, row in enumerate(df):
@@ -87,14 +86,14 @@ def main():
 
 			col: list = dataset_cols[header]
 
-			if get_type(header=header) == NUMERIC_TYPE:
+			if get_type(header=header, col_types=col_types) == NUMERIC_TYPE:
 				val: float = float(val)
 
 			col.append(val)
 
 		# Validate that the row was added correctly to the data set's columns
 		for j, header in enumerate(headers):
-			if get_type(header=header) == NUMERIC_TYPE:
+			if get_type(header=header, col_types=col_types) == NUMERIC_TYPE:
 				assert dataset_cols[header][i] == float(row[j])
 			else:
 				assert dataset_cols[header][i] == row[j]
@@ -224,8 +223,8 @@ def compare(header1: str, header2: str) -> float:
 	list1: list = dataset_cols[header1]
 	list2: list = dataset_cols[header2]
 	assert len(list1) == len(list2)
-	type1: str = get_type(header=header1)
-	type2: str = get_type(header=header2)
+	type1: str = get_type(header=header1, col_types=col_types)
+	type2: str = get_type(header=header2, col_types=col_types)
 	stat = None
 
 	if type1 == NOMINAL_TYPE and type2 == NOMINAL_TYPE:
@@ -241,16 +240,6 @@ def compare(header1: str, header2: str) -> float:
 		exit(1)
 
 	return stat
-
-
-def get_type(header: str) -> str:
-	"""Gets the data type of a column given its header"""
-
-	# All the MRI and expression data is numeric and thus does not need to be included in the column types
-	if header not in col_types:
-		return NUMERIC_TYPE
-
-	return col_types[header]
 
 
 def run_contingency(list1: list, list2: list) -> float:
