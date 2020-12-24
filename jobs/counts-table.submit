@@ -1,0 +1,15 @@
+#!/bin/sh
+
+SCRIPT_NAME="counts-table"
+COMP_DICT_DIR="comp-dicts"
+SUPER_ALPHA="1e-100"
+JOB_NAME=${SCRIPT_NAME}-${SUPER_ALPHA}
+
+sbatch -J $JOB_NAME \
+    --time=00-02:00:00 \
+    --nodes=1 \
+    --ntasks=1 \
+    --mem=512G \
+    -o slurm-output/${JOB_NAME}.out \
+    -e slurm-output/${JOB_NAME}.err \
+    jobs/${SCRIPT_NAME}.sh $COMP_DICT_DIR $SUPER_ALPHA
