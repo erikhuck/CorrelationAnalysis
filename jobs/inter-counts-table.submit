@@ -1,0 +1,17 @@
+#!/bin/sh
+
+SCRIPT_NAME="inter-counts-table"
+COMP_DICT_DIR="comp-dicts"
+SUPER_ALPHA="1e-100"
+IDX=$1
+SECTION_SIZE=1
+JOB_NAME=${SCRIPT_NAME}-${IDX}
+
+sbatch -J $JOB_NAME \
+    --time=00-24:00:00 \
+    --nodes=1 \
+    --ntasks=1 \
+    --mem=64G \
+    -o slurm-output/${JOB_NAME}.out \
+    -e slurm-output/${JOB_NAME}.err \
+    jobs/${SCRIPT_NAME}.sh $COMP_DICT_DIR $SUPER_ALPHA $IDX $SECTION_SIZE
