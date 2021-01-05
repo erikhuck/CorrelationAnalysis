@@ -1,17 +1,17 @@
 #!/bin/sh
 
-SCRIPT_NAME="inter-counts-table"
+SCRIPT_NAME="alpha-filter"
 COMP_DICT_DIR="comp-dicts"
-SUPER_ALPHA="5e-324"
+ALPHA="5e-324"
 IDX=$1
 SECTION_SIZE=5
 JOB_NAME=${SCRIPT_NAME}-${IDX}
 
 sbatch -J $JOB_NAME \
-    --time=03-00:00:00 \
+    --time=00-01:00:00 \
     --nodes=1 \
     --ntasks=1 \
-    --mem=64G \
+    --mem=128G \
     -o slurm-output/${JOB_NAME}.out \
     -e slurm-output/${JOB_NAME}.err \
-    jobs/${SCRIPT_NAME}.sh $COMP_DICT_DIR $SUPER_ALPHA $IDX $SECTION_SIZE
+    jobs/${SCRIPT_NAME}.sh $COMP_DICT_DIR $ALPHA $IDX $SECTION_SIZE
