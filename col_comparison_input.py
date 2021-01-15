@@ -2,35 +2,40 @@
 
 from sys import argv
 from math import sqrt
+from pandas import DataFrame
+
+from utils import START_IDX_KEY, STOP_IDX_KEY, N_ROWS_KEY
 
 
 def main():
     """Main method"""
 
-    stop_idx: int = int(argv[1])
-    n_rows: int = int(argv[2])
+    col_comp_inputs_path: str = argv[1]
+    stop_idx: int = int(argv[2])
+    n_rows: int = int(argv[3])
 
     # We begin at start index 2 to skip over the patient ID column
     start_idx: int = 2
 
-    # TODO: Make helper function: get_n_cols(start_idx: int, stop_idx: int)
     n_cols: int = stop_idx - start_idx + 1
-
     n_total_cells: int = get_n_total_cells(r=n_rows, c=n_cols)
     print('Number Of Total Cells:', n_total_cells)
     job_n: int = 0
+    inputs: dict = {
+        START_IDX_KEY: [],
+        STOP_IDX_KEY: [],
+        N_ROWS_KEY: []
+    }
 
     while start_idx < stop_idx:
-        print('Job Number:', job_n + 1)
+        print('Job Number:', job_n)
         print('Start: {} Stop: {}'.format(start_idx, stop_idx))
 
-        # TODO: Should use inclusive counting; Use helper function
         n_cols: int = stop_idx - start_idx
         print('Number Of Columns:', n_cols)
 
         # If the content of the square root in the get_n_rows equation equates to a negative
         if sqrt_content(t=n_total_cells, c=n_cols) < 0.0:
-            # TODO: Should correct for inclusive counting maybe?
             n_rows: int = n_cols
         else:
             n_rows: int = get_n_rows(t=n_total_cells, c=n_cols)
@@ -39,10 +44,17 @@ def main():
         print('Number Of Total Cells:', get_n_total_cells(r=n_rows, c=n_cols))
         print()
 
+        inputs[START_IDX_KEY].append(start_idx)
+        inputs[STOP_IDX_KEY].append(stop_idx)
+        inputs[N_ROWS_KEY].append(n_rows)
+
         start_idx += n_rows
         job_n += 1
 
     assert start_idx == stop_idx
+
+    inputs: DataFrame = DataFrame(inputs)
+    inputs.to_csv(col_comp_inputs_path, index=False)
 
 
 def get_n_total_cells(r: int, c: int) -> int:

@@ -4,14 +4,16 @@ a statistical test between those 2 columns. This dictionary represents and is mo
 from numpy import array
 from scipy.stats import chi2_contingency, pearsonr, f_oneway
 from os import popen
-from pandas import DataFrame
+from pandas import DataFrame, read_csv
 from pickle import dump
 from time import time
 from sys import argv, stdout
 from multiprocessing import Pool, freeze_support
 from math import ceil
 
-from utils import get_type, NUMERIC_TYPE, NOMINAL_TYPE, get_col_types
+from utils import (
+	get_type, NUMERIC_TYPE, NOMINAL_TYPE, get_col_types, START_IDX_KEY, STOP_IDX_KEY, N_ROWS_KEY
+)
 
 """
 Real Data:
@@ -36,12 +38,7 @@ def main():
 	global col_types
 	global headers
 
-	data_path: str = argv[1]
-	start_idx: int = int(argv[2])
-	stop_idx: int = int(argv[3])
-	n_rows: int = int(argv[4])
-	n_cores: int = int(argv[5])
-	out_dir: str = argv[6]
+	data_path, start_idx, stop_idx, n_rows, n_cores, out_dir = get_args()
 
 	# We don't want to begin at the PTID column
 	assert start_idx >= 2
@@ -114,6 +111,24 @@ def main():
 
 	with open('data/{}/{}.p'.format(out_dir, str(start_idx).zfill(7)), 'wb') as f:
 		dump(comparison_dict, f)
+
+
+def get_args() -> tuple:
+	"""Gets the arguments for this job's section of the conceptual matrix"""
+
+	data_path: str = argv[1]
+	inputs: DataFrame = read_csv(argv[2])
+	job_n: int = int(argv[3])
+
+	assert job_n < len(inputs)
+
+	start_idx: int = inputs.loc[job_n][START_IDX_KEY]
+	stop_idx: int = inputs.loc[job_n][STOP_IDX_KEY]
+	n_rows: int = inputs.loc[job_n][N_ROWS_KEY]
+	n_cores: int = int(argv[4])
+	out_dir: str = argv[5]
+
+	return data_path, start_idx, stop_idx, n_rows, n_cores, out_dir
 
 
 def get_cut_command_result(start_idx: int, stop_idx: int, data_path: str) -> str:

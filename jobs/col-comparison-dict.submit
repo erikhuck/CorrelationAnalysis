@@ -2,19 +2,18 @@
 
 SCRIPT_NAME="col-comparison-dict"
 DATA_PATH="data/data.csv"
-START_IDX=$1
-STOP_IDX=$2
-N_ROWS=$3
+COL_COMP_INPUTS_PATH="data/col-comp-inputs.csv"
+JOB_N=$1
 N_CORES=3
 OUT_DIR="comp-dicts"
 MEM=128
-JOB_NAME=$SCRIPT_NAME-${START_IDX}-${N_ROWS}-${N_CORES}-${MEM}
+JOB_NAME=$SCRIPT_NAME-${JOB_N}-${N_CORES}-${MEM}
 
 sbatch -J $JOB_NAME \
-    --time=00-3:00:00 \
+    --time=00-6:00:00 \
     --nodes=1 \
     --ntasks=$N_CORES \
     --mem=${MEM}G \
     -o slurm-output/${JOB_NAME}.out \
     -e slurm-output/${JOB_NAME}.err \
-    jobs/${SCRIPT_NAME}.sh $DATA_PATH $START_IDX $STOP_IDX $N_ROWS $N_CORES $OUT_DIR
+    jobs/${SCRIPT_NAME}.sh $DATA_PATH $COL_COMP_INPUTS_PATH $JOB_N $N_CORES $OUT_DIR
