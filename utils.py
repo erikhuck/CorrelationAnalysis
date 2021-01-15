@@ -8,6 +8,7 @@ from tqdm import tqdm
 
 NUMERIC_TYPE: str = 'numeric'
 NOMINAL_TYPE: str = 'nominal'
+COL_TYPES_PICKLE_PATH: str = 'data/col-types.p'
 ALPHAS_PATH: str = 'data/alphas.p'
 INTER_COUNTS_TABLE_DIR: str = 'data/inter-counts-tables'
 COUNTS_TABLE_PATH: str = 'data/counts-table.csv'
@@ -99,7 +100,7 @@ def iterate_comp_dicts(comp_dict_dir: str, idx: int, section_size: int, func: ca
 def get_col_types() -> dict:
     """Gets the dictionary mapping a column header name to its corresponding data type"""
 
-    return load(open('data/col-types.p', 'rb'))
+    return load(open(COL_TYPES_PICKLE_PATH, 'rb'))
 
 
 def get_comparison_type(feat1: str, feat2: str, col_types: dict):

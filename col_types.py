@@ -4,13 +4,14 @@ from sys import argv
 from pandas import DataFrame, read_csv
 from pickle import dump
 
+from utils import COL_TYPES_PICKLE_PATH
+
 
 def main():
     """See module doc"""
 
     col_types_path: str = argv[1]
     adnimerge_col_types_path: str = argv[2]
-    pickle_path: str = argv[3]
     col_types: DataFrame = read_csv(col_types_path)
     adnimerge_col_types: DataFrame = read_csv(adnimerge_col_types_path)
 
@@ -28,7 +29,7 @@ def main():
     for col_name, data_type in zip(col_names, data_types):
         col_types[col_name] = data_type
 
-    with open(pickle_path, 'wb') as f:
+    with open(COL_TYPES_PICKLE_PATH, 'wb') as f:
         dump(col_types, f)
 
 
