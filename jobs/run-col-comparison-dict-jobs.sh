@@ -1,5 +1,5 @@
-TOTAL_N_COLS=1047909 # 1048
-N_ROWS=66 # 55
+TOTAL_N_COLS=849522 # 1048 
+N_ROWS=74 # 66 # 55
 
 function get_n_total_cells {
     N_ROWS=$1
@@ -21,17 +21,17 @@ function sqrt_content {
     N_TOTAL_CELLS=$2
 
     echo `python3 -c "c = ${N_COLS}; t = ${N_TOTAL_CELLS}; print((2*c - 1)**2 - 8*t)"`
-
 }
-
-N_TOTAL_CELLS=`get_n_total_cells ${N_ROWS} ${TOTAL_N_COLS}`
-echo "Number Of Total Cells: ${N_TOTAL_CELLS}"
 
 # Now we add 1 to the total number of columns to account for the patient ID column
 let STOP_IDX=TOTAL_N_COLS+1
 
 # We begin at a start index of 2 to skip the patient ID column
-START_IDX=2
+START_IDX=93856 # 2
+
+let N_COLS=${STOP_IDX}-${START_IDX} # ${TOTAL_N_COLS}
+N_TOTAL_CELLS=`get_n_total_cells ${N_ROWS} ${N_COLS}`
+echo "Number Of Total Cells: ${N_TOTAL_CELLS}"
 
 JOB_N=1
 

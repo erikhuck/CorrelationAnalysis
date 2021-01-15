@@ -5,9 +5,8 @@ from os.path import join
 from pickle import load
 from pandas import DataFrame
 
-from utils import ALPHA_FILTERED_DIR
+from utils import ALPHA_FILTERED_DIR, MIN_ALPHA
 
-MIN_ALPHA: float = 5e-324
 FEAT_KEY: str = 'Feature'
 FREQ_KEY: str = 'Frequency'
 

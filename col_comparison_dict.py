@@ -15,8 +15,8 @@ from utils import get_type, NUMERIC_TYPE, NOMINAL_TYPE, get_col_types
 
 """
 Real Data:
-Stop Index: 1047910
-Base Number Of Rows: 132
+Stop Index: 849523
+Base Number Of Rows: 66
 
 Debug Data:
 Stop Index: 1049
