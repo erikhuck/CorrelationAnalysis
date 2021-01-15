@@ -20,6 +20,16 @@ IDX_COL: str = 'idx'
 NUM_NUM_KEY: str = 'Numerical Numerical'
 NOM_NOM_KEY: str = 'Categorical Categorical'
 NUM_NOM_KEY: str = 'Numerical Categorical'
+MAX_SIGNIFICANCE_KEY: str = 'Maximum Significance'
+MRI_MRI_KEY: str = 'MRI MRI'
+EXPRESSION_EXPRESSION_KEY: str = 'Expression Expression'
+ADNIMERGE_ADNIMERGE_KEY: str = 'ADNIMERGE ADNIMERGE'
+MRI_EXPRESSION_KEY: str = 'MRI Expression'
+MRI_ADNIMERGE_KEY: str = 'MRI ADNIMERGE'
+EXPRESSION_ADNIMERGE_KEY: str = 'Expression ADNIMERGE'
+DATA_TYPE_TABLE_TYPE: str = 'data-type'
+DOMAIN_TABLE_TYPE: str = 'domain'
+MIN_ALPHA: float = 5e-324
 
 
 def get_type(header: str, col_types: dict) -> str:
