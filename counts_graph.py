@@ -2,6 +2,7 @@
 
 from pandas import read_csv, DataFrame
 from matplotlib import pyplot as plt
+from sys import argv
 
 from utils import (
     COUNTS_TABLE_PATH, INSIGNIFICANT_KEY, UNCORRECTED_ALPHA_KEY, CORRECTED_ALPHA_KEY, SUPER_ALPHA_KEY, IDX_COL
@@ -11,7 +12,9 @@ from utils import (
 def main():
     """Main method"""
 
-    table: DataFrame = read_csv(COUNTS_TABLE_PATH, index_col=IDX_COL)
+    table_type: str = argv[1]
+    table: DataFrame = read_csv(COUNTS_TABLE_PATH.format(table_type), index_col=IDX_COL)
+    # TODO: Fix counts graph script beginning with including the maximum signigicance counts
     insignificant_counts: list = list(table[INSIGNIFICANT_KEY])
     uncorrected_counts: list = list(table[UNCORRECTED_ALPHA_KEY])
     corrected_counts: list = list(table[CORRECTED_ALPHA_KEY])

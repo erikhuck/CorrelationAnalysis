@@ -42,6 +42,7 @@ def main():
     )
 
     print(table)
+
     inter_counts_tables_dir: str = INTER_COUNTS_TABLE_DIR.format(table_type)
 
     if not isdir(inter_counts_tables_dir):
