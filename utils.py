@@ -8,6 +8,7 @@ from tqdm import tqdm
 
 NUMERIC_TYPE: str = 'numeric'
 NOMINAL_TYPE: str = 'nominal'
+COL_TYPES_PATH: str = 'data/col-types.csv'
 COL_TYPES_PICKLE_PATH: str = 'data/col-types.p'
 ALPHAS_PATH: str = 'data/alphas.p'
 INTER_COUNTS_TABLE_DIR: str = 'data/inter-counts-tables/{}'

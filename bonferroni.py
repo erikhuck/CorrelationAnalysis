@@ -4,7 +4,7 @@ from sys import argv
 from pandas import DataFrame, read_csv
 from pickle import dump
 
-from utils import ALPHAS_PATH
+from utils import ALPHAS_PATH, COL_TYPES_PATH
 
 
 def main():
@@ -12,7 +12,7 @@ def main():
 
     alpha: float = float(argv[1])
     print('Original Alpha:', alpha)
-    col_types: DataFrame = read_csv('data/col-types.csv')
+    col_types: DataFrame = read_csv(COL_TYPES_PATH)
     n_features: int = col_types.shape[-1]
     print('Number Of Features:', n_features)
     n_tests: int = (n_features ** 2 - n_features) / 2

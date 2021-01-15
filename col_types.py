@@ -4,15 +4,14 @@ from sys import argv
 from pandas import DataFrame, read_csv
 from pickle import dump
 
-from utils import COL_TYPES_PICKLE_PATH
+from utils import COL_TYPES_PICKLE_PATH, COL_TYPES_PATH
 
 
 def main():
     """See module doc"""
 
-    col_types_path: str = argv[1]
-    adnimerge_col_types_path: str = argv[2]
-    col_types: DataFrame = read_csv(col_types_path)
+    adnimerge_col_types_path: str = argv[1]
+    col_types: DataFrame = read_csv(COL_TYPES_PATH)
     adnimerge_col_types: DataFrame = read_csv(adnimerge_col_types_path)
 
     # Only use the ADNIMERGE columns types from the combined data since the types for expression and MRI are all a given
