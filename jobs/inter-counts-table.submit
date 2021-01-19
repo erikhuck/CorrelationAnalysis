@@ -2,9 +2,10 @@
 
 SCRIPT_NAME="inter-counts-table"
 COMP_DICT_DIR="comp-dicts"
-SUPER_ALPHA="5e-324"
+SUPER_ALPHA="1e-100"
 IDX=$1
 SECTION_SIZE=5
+TABLE_TYPE=$2
 JOB_NAME=${SCRIPT_NAME}-${IDX}
 
 sbatch -J $JOB_NAME \
@@ -14,4 +15,4 @@ sbatch -J $JOB_NAME \
     --mem=64G \
     -o slurm-output/${JOB_NAME}.out \
     -e slurm-output/${JOB_NAME}.err \
-    jobs/${SCRIPT_NAME}.sh $COMP_DICT_DIR $SUPER_ALPHA $IDX $SECTION_SIZE
+    jobs/${SCRIPT_NAME}.sh $COMP_DICT_DIR $SUPER_ALPHA $IDX $SECTION_SIZE $TABLE_TYPE

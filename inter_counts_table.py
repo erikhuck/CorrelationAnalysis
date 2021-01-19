@@ -65,6 +65,7 @@ def make_table(table_type: str) -> DataFrame:
     else:
         return None
 
+    idx_col += [TOTAL_KEY]
     empty_col: list = [0] * len(idx_col)
     table: DataFrame = DataFrame(
         {
@@ -92,8 +93,6 @@ def count_comparisons(
     else:
         row_key: str = get_comparison_domains(feat1=feat1, feat2=feat2, col_types=col_types)
 
-    table[TOTAL_KEY][row_key] += 1
-
     if p < MIN_ALPHA:
         col_key: str = MAX_SIGNIFICANCE_KEY
     elif p < super_alpha:
@@ -106,6 +105,9 @@ def count_comparisons(
         col_key: str = INSIGNIFICANT_KEY
 
     table[col_key][row_key] += 1
+    table[TOTAL_KEY][row_key] += 1
+    table[col_key][TOTAL_KEY] += 1
+    table[TOTAL_KEY][TOTAL_KEY] += 1
 
 
 def get_comparison_domains(feat1: str, feat2: str, col_types: dict) -> str:
